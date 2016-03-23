@@ -38,19 +38,27 @@ public class MyArrayList<E> implements List<E> {
 		mal.add(1);
 		mal.add(2);
 		mal.add(3);
+		System.out.println("Test");
 		System.out.println(Arrays.toString(mal.toArray()) + " size = " + mal.size);
 		
 		mal.remove(new Integer(2));
 		System.out.println(Arrays.toString(mal.toArray()) + " size = " + mal.size);
+		
+		mal.add(2, 1);
+		System.out.println(Arrays.toString(mal.toArray()) + " is new");
 	}
 
+	private void expandArray() {
+		E[] bigger = (E[]) new Object[array.length * 2];
+		System.arraycopy(array, 0, bigger, 0, array.length);
+		array = bigger;
+	}
+	
 	@Override
 	public boolean add(E element) {
 		if (size >= array.length) {
 			// make a bigger array and copy over the elements
-			E[] bigger = (E[]) new Object[array.length * 2];
-			System.arraycopy(array, 0, bigger, 0, array.length);
-			array = bigger;
+			expandArray();
 		} 
 		array[size] = element;
 		size++;
@@ -62,7 +70,14 @@ public class MyArrayList<E> implements List<E> {
 		if (index < 0 || index > size) {
 			throw new IndexOutOfBoundsException();
 		}
-		// TODO: fill in the rest of this method
+		if (size >= array.length) {
+			expandArray();
+		}
+		for (int i = size; i > index; i--) {	// shifts elements down
+			array[i] = array[i-1];
+		}
+		array[index] = element;
+		size++;
 	}
 
 	@Override
@@ -101,9 +116,16 @@ public class MyArrayList<E> implements List<E> {
 		return true;
 	}
 
+	private boolean inBounds(int index) {
+		if (index < 0 || index >= size) {
+			return false;
+		}
+		return true;
+	}
+	
 	@Override
 	public E get(int index) {
-		if (index < 0 || index >= size) {
+		if (!inBounds(index)) {
 			throw new IndexOutOfBoundsException();
 		}
 		return array[index];
@@ -202,8 +224,12 @@ public class MyArrayList<E> implements List<E> {
 
 	@Override
 	public E set(int index, E element) {
-		// TODO: fill in this method.
-		return null;
+		if (!inBounds(index)) {
+			throw new IndexOutOfBoundsException();
+		}
+		E previousElement = array[index];
+		array[index] = element;
+		return previousElement;
 	}
 
 	@Override
