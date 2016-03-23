@@ -43,9 +43,6 @@ public class MyArrayList<E> implements List<E> {
 		
 		mal.remove(new Integer(2));
 		System.out.println(Arrays.toString(mal.toArray()) + " size = " + mal.size);
-		
-		mal.add(2, 1);
-		System.out.println(Arrays.toString(mal.toArray()) + " is new");
 	}
 
 	private void expandArray() {
@@ -133,8 +130,14 @@ public class MyArrayList<E> implements List<E> {
 
 	@Override
 	public int indexOf(Object target) {
-		// TODO: fill in this method
-		return 0;
+		int foundIndex = -1;
+		for (int i = 0; i < size; i++) {
+			if (equals(target, array[i])) {
+				foundIndex = i;
+				break;
+			}
+		}
+		return foundIndex;
 	}
 
 	/** Checks whether an element of the array is the target.
@@ -204,8 +207,12 @@ public class MyArrayList<E> implements List<E> {
 
 	@Override
 	public E remove(int index) {
-		// TODO: fill in this method.
-		return null;
+		E prevElement = array[index];
+		for (int i = index; i < size-1; i++) {
+			array[i] = array[i+1];
+		}
+		size--;
+		return prevElement;
 	}
 
 	@Override
